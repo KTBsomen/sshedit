@@ -42,7 +42,7 @@ inotifywait -mr $targetDir -e create -e moved_to -e modify --exclude '/\..+'|
                  
                  echo "$path It's a change there in  $file so updating to server"
                  result=$(echo $path | sed "s@./@@")
-                 sudo scp -i $key $path$file $hostname@$host:$dir$result
+                 sudo scp -i $key $path$file $user@$host:$dir$result
                  
 
 
