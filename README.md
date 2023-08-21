@@ -3,7 +3,7 @@ so this code is a connector to your sshserver with .pem file(you can change the 
 basically it copy the whole file structure in your local mechine with current date so version controll and backup is automagically done
 and then runs a watcher for file changes as you change your files it will updated on the server realtime
 # steps to run 
-`sudo ./sshedit.sh`
+`sudo ./ssheditV2.sh`
 
 it will install some programm if not found,
 
