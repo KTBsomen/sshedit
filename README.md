@@ -16,3 +16,6 @@ then it will ask for the .pem file it will open a file chooser to select ,
 then it will ask for the file path to connect to like /home/ubuntu/,
 
 then it will ask for short code of your code editor like code (for vs code) subl (for sublime text)
+# for window 
+open powershell in administretive mode and run `Set-ExecutionPolicy Unrestricted `
+next steps are same but in windows the host and other properties must be provided through cmd
