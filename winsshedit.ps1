@@ -5,35 +5,31 @@ $key = Read-Host -Prompt "Path of key file (*.pem)"
 $dir = Read-Host -Prompt "Remote Directory (with / at the end)"
 
 # Create the necessary directory
-if (-Not (Test-Path -Path "$hostip")) {
-    New-Item -ItemType Directory -Path $hostip | Out-Null
-    Write-Host "$hostip directory is created and entering into it"
-    Set-Location -Path $hostip
-}
-else {
-    $newfile = "$hostip" + "_" + (Get-Date -Format "yyyy.MM.dd-HH.mm.ss")
-    New-Item -ItemType Directory -Path $newfile | Out-Null
-    Write-Host "$newfile directory is created and entering into it"
-    Set-Location -Path $newfile
-}
+
+$newfile = "$hostip" + "_" + (Get-Date -Format "yyyy.MM.dd-HH.mm.ss")
+New-Item -ItemType Directory -Path $newfile | Out-Null
+Write-Host "$newfile directory is created and entering into it"
+Set-Location -Path $newfile
+Write-Host "Watching for changes in the directory... $newfile"
+
 
 # Compress and download files from remote server
 Write-Host "Compressing files from remote. This might take time, please wait..."
 ssh -i $key $user@$hostip "cd $dir; zip -r $newfile.zip ."
 Write-Host "Downloading $newfile.zip. This might take time, please wait..."
-scp -i $key -r "${user}@${host}:${dir}${newfile}.zip" .
-Expand-Archive -Path $newfile.zip -DestinationPath . -Force
-Remove-Item $newfile.zip
+scp -i $key -r "${user}@${hostip}:${dir}${newfile}.zip" .
+7z x "./${newfile}.zip"
+Remove-Item ./$newfile.zip
 ssh -i $key $user@$hostip "cd $dir; rm -r $newfile.zip"
 
 # Prompt for editor command
 $editor = Read-Host -Prompt "Favorite Editor command (without .)"
 
 # Open the editor
-Start-Process -FilePath "$editor" -ArgumentList "." -Verb RunAs
+Start-Process -FilePath "$editor" -ArgumentList "$pwd" -Verb RunAs
 
 # Watch for changes and update files on the remote server
-$targetDir = "."
+$targetDir = "$pwd"
 Write-Host "Watching for changes in the directory..."
 while ($true) {
     $action = (Get-ChildItem $targetDir -Recurse -Force | Where-Object { $_.LastWriteTime -ne $_.CreationTime }).Count
