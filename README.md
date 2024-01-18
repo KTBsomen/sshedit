@@ -19,4 +19,4 @@ then it will ask for short code of your code editor like code (for vs code) subl
 # for window 
 open powershell in administretive mode and run `Set-ExecutionPolicy Unrestricted `
 next steps are same but in windows the host and other properties must be provided through cmd
-you can also download the exe 
+
