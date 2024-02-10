@@ -1,0 +1,16 @@
+[
+    {
+        "name": "frontend",
+        "hostip": "ec2-65-2-38-131.ap-south-1.compute.amazonaws.com",
+        "username": "root",
+        "pemkeyfile": "C:\\Users\\somen\\MOULD\\pharmabag\\pharmabag.pem",
+        "documentRoot": "/var/www/html/"
+    },
+    {
+        "name": "apis",
+        "hostip": "ec2-65-2-38-131.ap-south-1.compute.amazonaws.com",
+        "username": "root",
+        "pemkeyfile": "C:\\Users\\somen\\MOULD\\pharmabag\\pharmabag.pem",
+        "documentRoot": "/home/ubuntu/"
+    }
+]
