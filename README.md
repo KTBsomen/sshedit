@@ -1,10 +1,12 @@
-Certainly! Below is a revised version of your README for GitHub, including some visual elements and clearer instructions.
 
----
 
 # SSHedit
 
-![SSHedit Logo](https://via.placeholder.com/150)
+<p align="center">
+  <img src="" alt="SSHedit Logo">
+</p>
+
+<h1 align="center">SSHedit</h1>
 
 SSHedit is a powerful tool that connects to your SSH server using a `.pem` file or password authentication. It automatically copies the entire file structure to your local machine with the current date, ensuring version control and backups. Additionally, SSHedit runs a file watcher to update files on the server in real-time as you make changes locally.
 
@@ -70,7 +72,7 @@ Configure your SSH connection settings in the `winssheditConfig.json` file for W
 
 3. **Enjoy Seamless SSH Editing:**
 
-   ![SSHedit Screenshot](https://via.placeholder.com/800x400)
+   ![SSHedit Screenshot](https://github.com/KTBsomen/sshedit/assets/53004533/8f383ae6-38fd-4544-aef6-c44354c427ce)
 
 ## Troubleshooting
 
@@ -86,3 +88,6 @@ We welcome contributions! Please read our [Contributing Guidelines](https://gith
 
 This project is licensed under the MIT License. See the [LICENSE](https://github.com/KTBsomen/sshedit/blob/main/LICENSE) file for more information.
 
+---
+
+Feel free to replace the placeholder URLs and images with actual resources. This version centers the project name and logo for a more polished look.
