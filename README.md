@@ -3,7 +3,7 @@
 # SSHedit
 
 <p align="center">
-  <img src="" alt="SSHedit Logo">
+  <img src="https://github.com/KTBsomen/sshedit/assets/53004533/d047b732-437b-445d-af77-4818e0b108ac" alt="SSHedit Logo" width="100" height="100">
 </p>
 
 <h1 align="center">SSHedit</h1>
