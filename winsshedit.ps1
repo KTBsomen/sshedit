@@ -35,7 +35,7 @@ $excludeParams = ""
 if ($null -ne $exclusions -and $exclusions.Count -gt 0) {
     $excludeParams = "-x"
     foreach ($exclude in $exclusions) {
-        $excludeParams += " $exclude"
+        $excludeParams += " '$exclude'"
     }
 }
 # Ensure the remote command string is properly formatted
