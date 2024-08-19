@@ -13,10 +13,9 @@
         "pemkeyfile": "C:\\Users\\somen\\MOULD\\pharmabag\\pharmabag.pem",
         "documentRoot": "/home/ubuntu/",
         "exclusions": [
-            "node_modules",
-            "uploads",
-            "logs",
-            "*.tmp"
+            "node_modules/*",
+            "uploads/*",
+         
         ]
     }
 ]
