@@ -11,6 +11,12 @@
         "hostip": "ec2-65-2-38-131.ap-south-1.compute.amazonaws.com",
         "username": "root",
         "pemkeyfile": "C:\\Users\\somen\\MOULD\\pharmabag\\pharmabag.pem",
-        "documentRoot": "/home/ubuntu/"
+        "documentRoot": "/home/ubuntu/",
+        "exclusions": [
+            "node_modules",
+            "uploads",
+            "logs",
+            "*.tmp"
+        ]
     }
 ]
