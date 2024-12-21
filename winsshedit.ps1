@@ -1,6 +1,8 @@
-# Prompt for user input
-$filePath = Read-Host -Prompt "config file path "
-
+$defaultPath = Join-Path $PSScriptRoot "winssheditConfig.json"
+$filePath = Read-Host -Prompt "config file path (press Enter for default: $defaultPath) "
+if ([string]::IsNullOrWhiteSpace($filePath)) {
+    $filePath = $defaultPath
+}
 # Read the content of the file
 $jsonContent = Get-Content -Path $filePath -Raw
 
