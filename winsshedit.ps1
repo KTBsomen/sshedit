@@ -25,40 +25,98 @@ $global:user = $selectedServer.username
 $global:key = $selectedServer.pemkeyfile
 $global:dir = $selectedServer.documentRoot
 $exclusions = $selectedServer.exclusions
-
-# Create the necessary directory
-$newfile = "$hostip" + "_" + (Get-Date -Format "yyyy.MM.dd-HH.mm.ss")
-New-Item -ItemType Directory -Path $newfile | Out-Null
-Write-Host "$newfile directory is created and entering into it"
-Set-Location -Path $newfile
-Write-Host "Watching for changes in the directory... $newfile"
-
-$excludeParams = ""
-if ($null -ne $exclusions -and $exclusions.Count -gt 0) {
-    $excludeParams = "-x"
-    foreach ($exclude in $exclusions) {
-        $excludeParams += " '$exclude'"
-    }
+$reloadFromServer = Read-Host -Prompt "Do you want to reload files from the server? (y/n) Default: y"
+if ([string]::IsNullOrWhiteSpace($reloadFromServer)) {
+    $reloadFromServer = "y"
 }
-# Ensure the remote command string is properly formatted
-$remoteCommand = "cd $dir; zip -r $newfile.zip . $excludeParams"
+if ($reloadFromServer -eq "y" -or $reloadFromServer -eq "Y" -or $reloadFromServer -eq "yes" -or $reloadFromServer -eq "Yes" -or $reloadFromServer -eq "YES") {
+    # Create the necessary directory
+    # replace / with _in dir
+    $safedir = $dir.Replace("/", "_")
+    $newfile = "$hostip" + "_" + "$safedir" + "_" + (Get-Date -Format "yyyy.MM.dd-HH.mm.ss")
+    New-Item -ItemType Directory -Path $newfile | Out-Null
+    Write-Host "$newfile directory is created and entering into it"
+    Set-Location -Path $newfile
+    # Build the exclude parameters
+    $excludeParams = ""
+    if ($null -ne $exclusions -and $exclusions.Count -gt 0) {
+        $excludeParams = "-x"
+        foreach ($exclude in $exclusions) {
+            # Preprocess each exclusion to ensure proper formatting
+                
+            $excludeParams += " '$exclude'"
+        }
+    }
 
-# Debugging: Output the remote command to ensure it's correct
-Write-Host "Executing remote command: ssh -i $key $user@$hostip `"$remoteCommand`""
+    # Format the remote command
+    $remoteCommand = "cd $dir; zip -r $newfile.zip . $excludeParams"
 
-# Execute the command on the remote server
-ssh -i $key $user@$hostip $remoteCommand
+    # Debugging: Output the remote command to ensure it's correct
+    Write-Host "Executing remote command: $remoteCommand"
 
-Write-Host "Downloading $newfile.zip. This might take time, please wait..."
-scp -i $key -r "${user}@${hostip}:${dir}${newfile}.zip" .
-7z x "./${newfile}.zip"
+    # Build the SSH command with explicit arguments
+    ssh -i $key $user@$hostip $remoteCommand
 
-Write-Host "Removing the zip file from remote"
-ssh -i $key $user@$hostip "cd $dir; rm -r $newfile.zip"
+    Write-Host "Downloading $newfile.zip. This might take time, please wait..."
+    scp -i $key -r "${user}@${hostip}:${dir}${newfile}.zip" .
+    7z x "./${newfile}.zip"
+
+    Write-Host "Removing the zip file from remote"
+    ssh -i $key $user@$hostip "cd $dir; rm -r $newfile.zip"
+}
 Write-Host "Copy paste this line to open a remote shell."
 Write-Host "ssh -i $key $user@$hostip"
 Write-Host ""
 
+
+
+if ($reloadFromServer -notmatch '^(y|Y|yes|Yes|YES)$') {
+    # Get all directories matching the pattern hostip_date
+    $directories = Get-ChildItem -Directory | Where-Object { $_.Name -match "^${hostip}_.*" } | Sort-Object LastWriteTime -Descending        
+    if ($directories.Count -eq 0) {
+        Write-Host "No existing directories found.Try reloading from server"
+        exit
+    }
+    
+    Write-Host "Available directories for this host:"
+    for ($i = 0; $i -lt $directories.Count; $i++) {
+        Write-Host "$($i + 1): $($directories[$i].Name)"
+    }
+    
+    $dirChoice = Read-Host -Prompt "Select a directory (1-$($directories.Count))"
+    if ([int]$dirChoice -lt 1 -or [int]$dirChoice -gt $directories.Count) {
+        Write-Host "Invalid selection"
+        exit
+    }
+    
+    $selectedDir = $directories[$dirChoice - 1].Name
+    Write-Host "Backing up selected directory: $selectedDir"
+    # copy and rename the selected directory
+    $newDir = "Backup_of_" + "$selectedDir" + "_timestamp_" + (Get-Date -Format "yyyy.MM.dd-HH.mm.ss")
+
+    $process = Start-Process robocopy -ArgumentList @(
+        "`"$selectedDir`"",
+        "`"$newDir`"",
+        "/E", "/COPY:DAT", "/MT:16", "/W:0", "/R:0"
+    ) -NoNewWindow -PassThru -RedirectStandardOutput ".\robocopy.log"
+        
+    while (!$process.HasExited) {
+        if (Test-Path ".\robocopy.log") {
+            $stats = Get-Content ".\robocopy.log" -Tail 1
+            if ($stats -match '\s*(\d+(?:\.\d+)?)\s*%') {
+                $progress = [math]::Min([math]::Max([int]$matches[1], 0), 100)
+                Write-Progress -Activity "Copying files" -Status "Progress: ${progress}%" -PercentComplete $progress
+            }
+        }
+        Start-Sleep -Milliseconds 100
+    }
+        
+    Remove-Item ".\robocopy.log"
+    Write-Progress -Activity "Backing up files" -Completed
+    Write-Host "Backup completed: $newDir"
+    Set-Location -Path $selectedDir
+    
+}
 # Prompt for editor command
 $editor = Read-Host -Prompt "Favorite Editor command (without .)"
 Start-Process -FilePath "$editor" -ArgumentList "$pwd" -NoNewWindow
