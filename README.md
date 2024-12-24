@@ -55,7 +55,12 @@ Configure your SSH connection settings in the `winssheditConfig.json` file for W
   "host": "3.23.253.5",
   "username": "ubuntu",
   "pem_file": "path/to/your/key.pem",
-  "remote_path": "/home/ubuntu/"
+  "remote_path": "/home/ubuntu/",
+  "exclusions": [
+            "node_modules/*",
+            "uploads/*"
+          
+        ]
 }
 ```
 
