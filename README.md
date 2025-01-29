@@ -10,7 +10,7 @@
   <img src="https://github.com/user-attachments/assets/ef19fbe9-8944-4fc7-bff1-c52746dfe5b7" alt="SSHedit Logo">
 
 
-SSHedit is a powerful tool that connects to your SSH server using a `.pem` file or password authentication. It automatically copies the entire file structure to your local machine with the current date, ensuring version control and backups. Additionally, SSHedit runs a file watcher to update files on the server in real-time as you make changes locally.
+SSHedit is a powerful tool that connects to your SSH server using a `.pem` file or password authentication. It automatically copies the entire file structure to your local machine with the current date, ensuring version control and backups. Additionally, SSHedit runs a file watcher to update files on the server in realtime as you make changes locally.
 
 ## Features
 - **Automatic Version Control:** Back up your files with date-stamped copies.
@@ -18,7 +18,6 @@ SSHedit is a powerful tool that connects to your SSH server using a `.pem` file 
 - **Cross-Platform:** Supports both Unix-based systems and Windows.
 
 ## Installation and Usage
-
 ### Unix-based Systems
 
 1. **Run the script:**
@@ -65,7 +64,9 @@ Configure your SSH connection settings in the `winssheditConfig.json` file for W
         ]
 }
 ```
-
+## Server Setup
+- The server needs to have a zip unzip tool available for all users or users you want to connect with.
+- ### try running  `sudo apt install zip`
 ## Getting Started
 
 1. **Clone the Repository:**
@@ -86,6 +87,8 @@ Configure your SSH connection settings in the `winssheditConfig.json` file for W
 - Ensure you have the necessary permissions to execute scripts and access the SSH server.
 - Verify that `7zip` or `7z` is installed and in your PATH on Windows.
 - Check your network connection and SSH server accessibility.
+- Check whether `zip` is installed in your server or not.
+- the server should be Linux server for compatibility. 
 
 ## Contributing
 
