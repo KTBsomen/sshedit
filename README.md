@@ -7,6 +7,8 @@
 </p>
 
 <h1 align="center">SSHedit</h1>
+  <img src="https://github.com/user-attachments/assets/ef19fbe9-8944-4fc7-bff1-c52746dfe5b7" alt="SSHedit Logo">
+
 
 SSHedit is a powerful tool that connects to your SSH server using a `.pem` file or password authentication. It automatically copies the entire file structure to your local machine with the current date, ensuring version control and backups. Additionally, SSHedit runs a file watcher to update files on the server in real-time as you make changes locally.
 
